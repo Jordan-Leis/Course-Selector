@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
@@ -23,11 +23,7 @@ export default function DashboardPage() {
   const router = useRouter()
   const supabase = createClient()
 
-  useEffect(() => {
-    loadPlans()
-  }, [])
-
-  const loadPlans = async () => {
+  const loadPlans = useCallback(async () => {
     try {
       const {
         data: { user },
@@ -77,7 +73,11 @@ export default function DashboardPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [supabase, router])
+
+  useEffect(() => {
+    loadPlans()
+  }, [loadPlans])
 
   const handleCreatePlan = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -212,7 +212,7 @@ export default function DashboardPage() {
 
         {plans.length === 0 ? (
           <div className="bg-white rounded-lg shadow p-12 text-center">
-            <p className="text-gray-600 mb-4">You don't have any plans yet.</p>
+            <p className="text-gray-600 mb-4">You don&apos;t have any plans yet.</p>
             <p className="text-gray-500">Create your first plan to get started!</p>
           </div>
         ) : (

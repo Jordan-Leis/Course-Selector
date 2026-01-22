@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter, useParams } from 'next/navigation'
 import { Database } from '@/lib/supabase/types'
@@ -37,17 +37,7 @@ export default function PlanBuilderPage() {
   const [selectedTermIndex, setSelectedTermIndex] = useState<number | null>(null)
   const [warnings, setWarnings] = useState<{ type: string; message: string }[]>([])
 
-  useEffect(() => {
-    loadPlan()
-  }, [planId])
-
-  useEffect(() => {
-    if (plan) {
-      calculateWarnings()
-    }
-  }, [plan])
-
-  const loadPlan = async () => {
+  const loadPlan = useCallback(async () => {
     try {
       const {
         data: { user },
@@ -111,9 +101,9 @@ export default function PlanBuilderPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [planId, supabase, router])
 
-  const calculateWarnings = () => {
+  const calculateWarnings = useCallback(() => {
     if (!plan) return
 
     const warningsList: { type: string; message: string }[] = []
@@ -156,7 +146,17 @@ export default function PlanBuilderPage() {
     })
 
     setWarnings(warningsList)
-  }
+  }, [plan])
+
+  useEffect(() => {
+    loadPlan()
+  }, [loadPlan])
+
+  useEffect(() => {
+    if (plan) {
+      calculateWarnings()
+    }
+  }, [plan, calculateWarnings])
 
   const handleUpdatePlanName = async () => {
     if (!planName.trim()) return
