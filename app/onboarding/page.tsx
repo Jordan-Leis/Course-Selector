@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
+import { Database } from '@/lib/supabase/types'
 
 const PROGRAMS = [
   'Biomedical Engineering',
@@ -38,19 +39,24 @@ export default function OnboardingPage() {
           .from('profiles')
           .select('program')
           .eq('user_id', user.id)
-          .single()
+          .maybeSingle()
 
-        if (profile?.program) {
+        // Type assertion needed because TypeScript can't infer partial select types
+        const profileData = profile as { program: string | null } | null
+
+        if (profileData?.program) {
           router.push('/dashboard')
         } else {
           // Create profile if it doesn't exist
-          if (!profile) {
+          if (!profileData) {
             const { data: userData } = await supabase.auth.getUser()
             if (userData.user?.email) {
+              type ProfileInsert = Database['public']['Tables']['profiles']['Insert']
+              // @ts-ignore - Supabase type inference issue with inserts
               await supabase.from('profiles').insert({
                 user_id: user.id,
                 email: userData.user.email,
-              })
+              } as ProfileInsert)
             }
           }
         }
@@ -81,13 +87,15 @@ export default function OnboardingPage() {
       }
 
       // Update or insert profile
+      type ProfileInsert = Database['public']['Tables']['profiles']['Insert']
       const { error: updateError } = await supabase
         .from('profiles')
+        // @ts-ignore - Supabase type inference issue with upserts
         .upsert({
           user_id: user.id,
           email: user.email!,
           program,
-        })
+        } as ProfileInsert)
 
       if (updateError) {
         setError(updateError.message)

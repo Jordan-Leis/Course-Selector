@@ -57,7 +57,10 @@ export default function DashboardPage() {
             .select('id')
             .eq('plan_id', plan.id)
 
-          const planTermIds = planTerms?.map((pt) => pt.id) || []
+          // Type assertion needed because TypeScript can't infer partial select types
+          type PlanTermPartial = Pick<Database['public']['Tables']['plan_terms']['Row'], 'id'>
+          const typedPlanTerms = (planTerms || []) as PlanTermPartial[]
+          const planTermIds = typedPlanTerms.map((pt) => pt.id)
 
           // Then count courses in those terms
           const { count } = await supabase
@@ -100,26 +103,33 @@ export default function DashboardPage() {
       }
 
       // Create plan
-      const { data: plan, error: planError } = await supabase
+      type PlanInsert = Database['public']['Tables']['plans']['Insert']
+      type PlanRow = Database['public']['Tables']['plans']['Row']
+      const { data: plan, error: planError } = await (supabase
         .from('plans')
+        // @ts-ignore - Supabase type inference issue with inserts
         .insert({
           user_id: user.id,
           name: newPlanName.trim(),
-        })
+        } as PlanInsert)
         .select()
-        .single()
+        .single() as any)
+      const typedPlan = plan as PlanRow | null
 
       if (planError) throw planError
+      if (!typedPlan) throw new Error('Failed to create plan')
 
       // Create 8 plan terms
-      const planTerms = TERMS.map((label, index) => ({
-        plan_id: plan.id,
+      type PlanTermInsert = Database['public']['Tables']['plan_terms']['Insert']
+      const planTerms: PlanTermInsert[] = TERMS.map((label, index) => ({
+        plan_id: typedPlan.id,
         term_index: index,
         label,
       }))
 
       const { error: termsError } = await supabase
         .from('plan_terms')
+        // @ts-ignore - Supabase type inference issue with inserts
         .insert(planTerms)
 
       if (termsError) throw termsError
@@ -127,7 +137,7 @@ export default function DashboardPage() {
       setNewPlanName('')
       setShowCreateForm(false)
       loadPlans()
-      router.push(`/plan/${plan.id}`)
+      router.push(`/plan/${typedPlan.id}`)
     } catch (error) {
       console.error('Error creating plan:', error)
       alert('Failed to create plan. Please try again.')

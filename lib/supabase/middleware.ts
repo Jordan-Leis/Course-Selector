@@ -15,7 +15,7 @@ export async function updateSession(request: NextRequest) {
         getAll() {
           return request.cookies.getAll()
         },
-        setAll(cookiesToSet) {
+        setAll(cookiesToSet: Array<{ name: string; value: string; options?: any }>) {
           cookiesToSet.forEach(({ name, value, options }) => request.cookies.set(name, value))
           supabaseResponse = NextResponse.next({
             request,
@@ -54,10 +54,13 @@ export async function updateSession(request: NextRequest) {
       .from('profiles')
       .select('program')
       .eq('user_id', user.id)
-      .single()
+      .maybeSingle()
+
+    // Type assertion needed because TypeScript can't infer partial select types
+    const profileData = profile as { program: string | null } | null
 
     // If profile doesn't exist or program is missing, redirect to onboarding
-    if (!profile || !profile.program) {
+    if (!profileData || !profileData.program) {
       if (
         !request.nextUrl.pathname.startsWith('/login') &&
         request.nextUrl.pathname !== '/onboarding' &&

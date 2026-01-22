@@ -61,7 +61,11 @@ export default function PlanBuilderPage() {
         return
       }
 
-      setPlanName(planData.name)
+      // Type assertion needed because TypeScript can't infer types from select('*')
+      type PlanRow = Database['public']['Tables']['plans']['Row']
+      const typedPlanData = planData as PlanRow
+
+      setPlanName(typedPlanData.name)
 
       // Load plan terms
       const { data: termsData, error: termsError } = await supabase
@@ -72,9 +76,13 @@ export default function PlanBuilderPage() {
 
       if (termsError) throw termsError
 
+      // Type assertion for plan terms
+      type PlanTermRow = Database['public']['Tables']['plan_terms']['Row']
+      const typedTermsData = (termsData || []) as PlanTermRow[]
+
       // Load courses for each term
       const termsWithCourses = await Promise.all(
-        (termsData || []).map(async (term) => {
+        typedTermsData.map(async (term) => {
           const { data: termCourses, error: coursesError } = await supabase
             .from('plan_term_courses')
             .select('*, course:courses(*)')
@@ -91,8 +99,8 @@ export default function PlanBuilderPage() {
       )
 
       setPlan({
-        id: planData.id,
-        name: planData.name,
+        id: typedPlanData.id,
+        name: typedPlanData.name,
         terms: termsWithCourses,
       })
     } catch (error) {
@@ -162,9 +170,11 @@ export default function PlanBuilderPage() {
     if (!planName.trim()) return
 
     try {
+      type PlanUpdate = Database['public']['Tables']['plans']['Update']
       const { error } = await supabase
         .from('plans')
-        .update({ name: planName.trim() })
+        // @ts-ignore - Supabase type inference issue with updates
+        .update({ name: planName.trim() } as PlanUpdate)
         .eq('id', planId)
 
       if (error) throw error
@@ -190,11 +200,13 @@ export default function PlanBuilderPage() {
           ? Math.max(...term.courses.map((tc) => tc.position))
           : -1
 
+      type PlanTermCourseInsert = Database['public']['Tables']['plan_term_courses']['Insert']
+      // @ts-ignore - Supabase type inference issue with inserts
       const { error } = await supabase.from('plan_term_courses').insert({
         plan_term_id: term.id,
         course_id: course.id,
         position: maxPosition + 1,
-      })
+      } as PlanTermCourseInsert)
 
       if (error) throw error
 
