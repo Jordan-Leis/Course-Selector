@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { Database } from '@/lib/supabase/types'
 
 interface Plan {
   id: string
@@ -43,9 +44,13 @@ export default function DashboardPage() {
 
       if (plansError) throw plansError
 
+      // Type assertion needed because TypeScript can't infer partial select types
+      type PlanPartial = Pick<Database['public']['Tables']['plans']['Row'], 'id' | 'name' | 'created_at'>
+      const typedPlansData = (plansData || []) as PlanPartial[]
+
       // Get course counts for each plan
       const plansWithCounts = await Promise.all(
-        (plansData || []).map(async (plan) => {
+        typedPlansData.map(async (plan) => {
           // First get plan_term_ids for this plan
           const { data: planTerms } = await supabase
             .from('plan_terms')
