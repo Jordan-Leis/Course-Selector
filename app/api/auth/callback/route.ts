@@ -20,8 +20,11 @@ export async function GET(request: Request) {
         .eq('user_id', user.id)
         .maybeSingle()
       
+      // Type assertion needed because TypeScript can't infer partial select types with maybeSingle
+      const profileData = profile as Database['public']['Tables']['profiles']['Row'] | null
+      
       // If no profile or no program, redirect to onboarding
-      if (!profile || !profile.program) {
+      if (!profileData || !profileData.program) {
         return NextResponse.redirect(`${origin}/onboarding`)
       }
     }
