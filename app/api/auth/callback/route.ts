@@ -17,10 +17,10 @@ export async function GET(request: Request) {
         .from('profiles')
         .select('program')
         .eq('user_id', user.id)
-        .single()
+        .maybeSingle()
       
       // If no profile or no program, redirect to onboarding
-      if (!profile || !profile.program) {
+      if (!profile?.program) {
         return NextResponse.redirect(`${origin}/onboarding`)
       }
     }
