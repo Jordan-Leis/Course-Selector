@@ -30,7 +30,16 @@ export default function PlanBuilderPage() {
   const params = useParams()
   const planId = params.id as string
   const router = useRouter()
-  const supabase = createClient()
+  
+  const getSupabaseClient = () => {
+    try {
+      return createClient()
+    } catch (error) {
+      return null
+    }
+  }
+  
+  const supabase = getSupabaseClient()
 
   const [plan, setPlan] = useState<PlanData | null>(null)
   const [planName, setPlanName] = useState('')
@@ -40,6 +49,11 @@ export default function PlanBuilderPage() {
   const [warnings, setWarnings] = useState<{ type: string; message: string }[]>([])
 
   const loadPlan = useCallback(async () => {
+    if (!supabase) {
+      setLoading(false)
+      return
+    }
+    
     try {
       const {
         data: { user },
@@ -169,7 +183,7 @@ export default function PlanBuilderPage() {
   }, [plan, calculateWarnings])
 
   const handleUpdatePlanName = async () => {
-    if (!planName.trim()) return
+    if (!planName.trim() || !supabase) return
 
     try {
       type PlanUpdate = Database['public']['Tables']['plans']['Update']
@@ -190,7 +204,7 @@ export default function PlanBuilderPage() {
   }
 
   const handleAddCourse = async (course: Course) => {
-    if (selectedTermIndex === null) return
+    if (selectedTermIndex === null || !supabase) return
 
     try {
       const term = plan?.terms.find((t) => t.term_index === selectedTermIndex)
@@ -220,6 +234,8 @@ export default function PlanBuilderPage() {
   }
 
   const handleRemoveCourse = async (planTermCourseId: string) => {
+    if (!supabase) return
+    
     try {
       const { error } = await supabase
         .from('plan_term_courses')
@@ -233,6 +249,14 @@ export default function PlanBuilderPage() {
       console.error('Error removing course:', error)
       alert('Failed to remove course')
     }
+  }
+
+  if (!supabase) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-red-600">Error: Supabase configuration missing. Please check environment variables.</div>
+      </div>
+    )
   }
 
   if (loading) {

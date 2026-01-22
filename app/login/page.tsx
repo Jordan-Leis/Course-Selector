@@ -12,10 +12,25 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
   const router = useRouter()
-  const supabase = createClient()
+  
+  const getSupabaseClient = () => {
+    try {
+      return createClient()
+    } catch (error) {
+      return null
+    }
+  }
+  
+  const supabase = getSupabaseClient()
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
+    
+    if (!supabase) {
+      setMessage({ type: 'error', text: 'Supabase configuration error. Please check environment variables.' })
+      return
+    }
+    
     setLoading(true)
     setMessage(null)
 

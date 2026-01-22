@@ -28,9 +28,20 @@ export default function OnboardingPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const router = useRouter()
-  const supabase = createClient()
+  
+  const getSupabaseClient = () => {
+    try {
+      return createClient()
+    } catch (error) {
+      return null
+    }
+  }
+  
+  const supabase = getSupabaseClient()
 
   useEffect(() => {
+    if (!supabase) return
+    
     // Check if user is already onboarded
     const checkProfile = async () => {
       const {
@@ -66,6 +77,14 @@ export default function OnboardingPage() {
     }
     checkProfile()
   }, [router, supabase])
+  
+  if (!supabase) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-red-600">Error: Supabase configuration missing. Please check environment variables.</div>
+      </div>
+    )
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()

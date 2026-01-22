@@ -24,9 +24,25 @@ export default function DashboardPage() {
   const [newPlanName, setNewPlanName] = useState('')
   const [showCreateForm, setShowCreateForm] = useState(false)
   const router = useRouter()
-  const supabase = createClient()
+  
+  // Create client lazily to avoid issues during build
+  const getSupabaseClient = () => {
+    try {
+      return createClient()
+    } catch (error) {
+      console.error('Failed to create Supabase client:', error)
+      return null
+    }
+  }
+  
+  const supabase = getSupabaseClient()
 
   const loadPlans = useCallback(async () => {
+    if (!supabase) {
+      setLoading(false)
+      return
+    }
+    
     try {
       const {
         data: { user },
@@ -91,7 +107,7 @@ export default function DashboardPage() {
 
   const handleCreatePlan = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!newPlanName.trim()) return
+    if (!newPlanName.trim() || !supabase) return
 
     setCreating(true)
     try {
@@ -149,7 +165,7 @@ export default function DashboardPage() {
   }
 
   const handleDeletePlan = async (planId: string) => {
-    if (!confirm('Are you sure you want to delete this plan? This action cannot be undone.')) {
+    if (!confirm('Are you sure you want to delete this plan? This action cannot be undone.') || !supabase) {
       return
     }
 
@@ -166,8 +182,18 @@ export default function DashboardPage() {
   }
 
   const handleLogout = async () => {
-    await supabase.auth.signOut()
+    if (supabase) {
+      await supabase.auth.signOut()
+    }
     router.push('/login')
+  }
+
+  if (!supabase) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-red-600">Error: Supabase configuration missing. Please check environment variables.</div>
+      </div>
+    )
   }
 
   if (loading) {
