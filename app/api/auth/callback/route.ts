@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
+import { Database } from '@/lib/supabase/types'
 
 export async function GET(request: Request) {
   const requestUrl = new URL(request.url)
@@ -15,12 +16,12 @@ export async function GET(request: Request) {
     if (user) {
       const { data: profile } = await supabase
         .from('profiles')
-        .select('program')
+        .select('*')
         .eq('user_id', user.id)
         .maybeSingle()
       
       // If no profile or no program, redirect to onboarding
-      if (!profile?.program) {
+      if (!profile || !profile.program) {
         return NextResponse.redirect(`${origin}/onboarding`)
       }
     }
