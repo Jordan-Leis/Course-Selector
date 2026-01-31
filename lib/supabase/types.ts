@@ -136,6 +136,105 @@ export interface Database {
           position?: number
         }
       }
+      course_prerequisites: {
+        Row: {
+          id: string
+          course_id: string
+          prerequisite_type: string
+          required_course_id: string | null
+          required_course_code: string | null
+          required_level: string | null
+          operator: string | null
+          group_id: number | null
+          raw_text: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          course_id: string
+          prerequisite_type: string
+          required_course_id?: string | null
+          required_course_code?: string | null
+          required_level?: string | null
+          operator?: string | null
+          group_id?: number | null
+          raw_text?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          course_id?: string
+          prerequisite_type?: string
+          required_course_id?: string | null
+          required_course_code?: string | null
+          required_level?: string | null
+          operator?: string | null
+          group_id?: number | null
+          raw_text?: string | null
+          created_at?: string
+        }
+      }
+      program_templates: {
+        Row: {
+          id: string
+          program_code: string
+          program_name: string
+          description: string | null
+          degree_type: string | null
+          required_courses: Json | null
+          elective_requirements: Json | null
+          minimum_units: number
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          program_code: string
+          program_name: string
+          description?: string | null
+          degree_type?: string | null
+          required_courses?: Json | null
+          elective_requirements?: Json | null
+          minimum_units?: number
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          program_code?: string
+          program_name?: string
+          description?: string | null
+          degree_type?: string | null
+          required_courses?: Json | null
+          elective_requirements?: Json | null
+          minimum_units?: number
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      user_programs: {
+        Row: {
+          id: string
+          user_id: string
+          program_id: string
+          is_primary: boolean
+          selected_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          program_id: string
+          is_primary?: boolean
+          selected_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          program_id?: string
+          is_primary?: boolean
+          selected_at?: string
+        }
+      }
     }
     Views: {
       [_ in never]: never

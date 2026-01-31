@@ -75,12 +75,14 @@ export async function setUserProgram(userId: string, programId: string): Promise
   const supabase = createClient()
   
   // First, mark all existing programs as non-primary
+  // @ts-ignore - Supabase type inference issue
   await supabase
     .from('user_programs')
     .update({ is_primary: false })
     .eq('user_id', userId)
   
   // Insert or update the selected program
+  // @ts-ignore - Supabase type inference issue
   const { error } = await supabase
     .from('user_programs')
     .upsert({
