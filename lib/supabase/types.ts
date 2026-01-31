@@ -18,6 +18,8 @@ export interface Database {
           title: string
           description: string | null
           units: number | null
+          active: boolean
+          last_seen_term: string | null
           updated_at: string
         }
         Insert: {
@@ -28,6 +30,8 @@ export interface Database {
           title: string
           description?: string | null
           units?: number | null
+          active?: boolean
+          last_seen_term?: string | null
           updated_at?: string
         }
         Update: {
@@ -38,6 +42,8 @@ export interface Database {
           title?: string
           description?: string | null
           units?: number | null
+          active?: boolean
+          last_seen_term?: string | null
           updated_at?: string
         }
       }

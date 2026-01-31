@@ -36,6 +36,7 @@ A production MVP for planning University of Waterloo Engineering courses term by
    - Or manually execute:
      - `001_initial_schema.sql` - Creates all tables and RLS policies
      - `002_seed_courses.sql` - Seeds initial course data
+     - `003_add_active_courses.sql` - Adds active/last_seen_term columns
 
 4. **Run the development server**:
    ```bash
@@ -48,9 +49,11 @@ A production MVP for planning University of Waterloo Engineering courses term by
 
 ### Using Supabase CLI
 
-1. Install Supabase CLI: `npm install -g supabase`
-2. Link your project: `supabase link --project-ref your-project-ref`
-3. Run migrations: `supabase db push`
+1. Install Supabase CLI: `npm install -g supabase` (or use local: `npm install`)
+2. Link your project: `npx supabase link --project-ref your-project-ref`
+3. Run migrations: `npx supabase db push`
+
+See [SUPABASE_CLI_SETUP.md](./SUPABASE_CLI_SETUP.md) for detailed CLI setup instructions.
 
 ### Manual Setup
 
@@ -59,15 +62,41 @@ A production MVP for planning University of Waterloo Engineering courses term by
 3. Run the SQL files in `supabase/migrations/` in order:
    - `001_initial_schema.sql`
    - `002_seed_courses.sql`
+   - `003_add_active_courses.sql`
+
+## Course Sync
+
+Sync courses from UW Open Data API to keep your course list up-to-date:
+
+```bash
+npm run sync-courses
+```
+
+This script:
+- Fetches courses from UW Open Data API for recent terms (last 6 terms ≈ 2 years)
+- Marks courses as active/inactive based on recent offerings
+- Updates course metadata (title, description, units)
+- Inserts new courses automatically
+
+**Setup**: Add to your `.env.local`:
+```
+SUPABASE_URL=your_supabase_url
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+UW_API_KEY=your_uw_api_key  # Optional, if UW API requires auth
+```
+
+See [scripts/README.md](./scripts/README.md) for detailed sync script documentation.
 
 ## Features
 
 - ✅ UW email gated sign-in (magic link authentication)
-- ✅ Course catalog search
+- ✅ Course catalog search (only shows active courses)
 - ✅ Term-by-term plan builder (1A → 4B)
 - ✅ Save and load multiple plans
 - ✅ Duplicate course warnings
 - ✅ Unit overload warnings (>6 units per term)
+- ✅ Course sync from UW Open Data API
+- ✅ Automatic inactive course filtering
 
 ## Project Structure
 
@@ -85,7 +114,11 @@ A production MVP for planning University of Waterloo Engineering courses term by
 ├── lib/
 │   ├── supabase/         # Supabase client utilities
 │   └── utils.ts          # Utility functions
+├── scripts/
+│   ├── sync-courses.ts   # Course sync script from UW API
+│   └── README.md         # Sync script documentation
 └── supabase/
+    ├── config.toml       # Supabase CLI configuration
     └── migrations/       # Database migrations
 ```
 
