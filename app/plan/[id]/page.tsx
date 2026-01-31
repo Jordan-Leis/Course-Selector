@@ -380,7 +380,7 @@ export default function PlanBuilderPage() {
                   </div>
                   <div className="flex-1">
                     <h3 className="font-bold text-amber-900 mb-2 text-lg">Warnings</h3>
-                    <p className="text-amber-700 text-sm mb-3">These issues should be reviewed but won't prevent plan submission.</p>
+                    <p className="text-amber-700 text-sm mb-3">These issues should be reviewed but won&apos;t prevent plan submission.</p>
                     <ul className="space-y-2">
                       {warnings.filter(w => w.severity === 'warning').map((warning, idx) => (
                         <li key={idx} className="bg-white/50 rounded-lg p-3">
