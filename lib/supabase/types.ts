@@ -20,6 +20,8 @@ export interface Database {
           units: number | null
           active: boolean
           last_seen_term: string | null
+          prerequisites_raw: string | null
+          has_prerequisites: boolean
           updated_at: string
         }
         Insert: {
@@ -32,6 +34,8 @@ export interface Database {
           units?: number | null
           active?: boolean
           last_seen_term?: string | null
+          prerequisites_raw?: string | null
+          has_prerequisites?: boolean
           updated_at?: string
         }
         Update: {
@@ -44,6 +48,8 @@ export interface Database {
           units?: number | null
           active?: boolean
           last_seen_term?: string | null
+          prerequisites_raw?: string | null
+          has_prerequisites?: boolean
           updated_at?: string
         }
       }
