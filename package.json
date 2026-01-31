@@ -10,7 +10,8 @@
     "lint:strict": "next lint --max-warnings 0",
     "type-check": "tsc --noEmit",
     "test:pre-commit": "npm run type-check && npm run lint:strict",
-    "sync-courses": "tsx scripts/sync-courses.ts"
+    "sync-courses": "tsx scripts/sync-courses.ts",
+    "setup-admin": "tsx scripts/setup-admin.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.5.1",

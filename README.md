@@ -47,11 +47,16 @@ A production MVP for planning University of Waterloo Engineering courses term by
 
 ## Database Setup
 
-### Using Supabase CLI
+### Using Supabase CLI (Recommended)
 
 1. Install Supabase CLI: `npm install -g supabase` (or use local: `npm install`)
 2. Link your project: `npx supabase link --project-ref your-project-ref`
 3. Run migrations: `npx supabase db push`
+4. Generate types: `npx supabase gen types typescript --linked > lib/supabase/types.ts`
+5. Sync courses: `npm run sync-courses`
+6. Create admin user: `npm run setup-admin your.email@uwaterloo.ca`
+
+See [DATABASE_SETUP.md](./DATABASE_SETUP.md) for detailed setup instructions and troubleshooting.
 
 See [SUPABASE_CLI_SETUP.md](./SUPABASE_CLI_SETUP.md) for detailed CLI setup instructions.
 
@@ -93,10 +98,48 @@ See [scripts/README.md](./scripts/README.md) for detailed sync script documentat
 - ✅ Course catalog search (only shows active courses)
 - ✅ Term-by-term plan builder (1A → 4B)
 - ✅ Save and load multiple plans
+- ✅ Prerequisite validation engine
 - ✅ Duplicate course warnings
 - ✅ Unit overload warnings (>6 units per term)
 - ✅ Course sync from UW Open Data API
 - ✅ Automatic inactive course filtering
+- ✅ **Program Templates**: EE, CE, SE with full requirements
+- ✅ **Admin System**: Role-based access control with audit logging
+- ✅ **Pre-commit Testing**: TypeScript + ESLint validation
+
+## Admin System
+
+Coursify includes a comprehensive admin panel for managing the platform. See [ADMIN_SYSTEM.md](./ADMIN_SYSTEM.md) for full documentation.
+
+**Admin Features**:
+- Program template management
+- Course catalog editing
+- User management and analytics
+- Plan validation tools
+- Complete audit log of all changes
+- Role-based permissions (super admin, program editor, course editor, viewer)
+
+**Setup Admin Account**:
+```bash
+npm run setup-admin your.email@uwaterloo.ca super_admin
+```
+
+**Access**: Navigate to `/admin` after signing in as an admin user.
+
+## Supported Programs
+
+The following programs have complete term-by-term requirements:
+
+| Program | Code | Degree | Units | Terms |
+|---------|------|--------|-------|-------|
+| Electrical Engineering | ECE_ELECTRICAL | BASc | 21.25 | 8 terms |
+| Computer Engineering | ECE_COMPUTER | BASc | 21.25 | 8 terms |
+| Software Engineering | SE | BSE | 21.50 | 8 terms |
+
+Each program includes:
+- Required courses for all 8 terms (1A-4B)
+- Detailed elective requirements (TEs, CSEs, NSEs, etc.)
+- Program-specific constraints and rules
 
 ## Project Structure
 
