@@ -72,17 +72,15 @@ export async function getUserProgram(userId: string): Promise<ProgramTemplate | 
  * Set user's program selection
  */
 export async function setUserProgram(userId: string, programId: string): Promise<boolean> {
-  const supabase = createClient()
+  const supabase = createClient() as any
   
-  // First, mark all existing programs as non-primary
-  // @ts-expect-error - Supabase type inference issue, will fix after sync optimization
+  // Mark all existing programs as non-primary
   await supabase
     .from('user_programs')
     .update({ is_primary: false })
     .eq('user_id', userId)
   
   // Insert or update the selected program
-  // @ts-expect-error - Supabase type inference issue, will fix after sync optimization
   const { error } = await supabase
     .from('user_programs')
     .upsert({
@@ -168,3 +166,38 @@ export function getRecommendedCoursesForTerm(
   // Filter out already completed courses
   return required.filter(course => !completedCourses.includes(course))
 }
+
+/**
+ * Calculate elective progress for a program
+ */
+export function calculateElectiveProgress(
+  program: ProgramTemplate,
+  planCourses: string[]
+): Record<string, {
+  required: number,
+  completed: number,
+  remaining: number,
+  details?: string
+}> {
+  const progress: Record<string, any> = {}
+  
+  if (!program.elective_requirements) return progress
+  
+  const electives = program.elective_requirements as Record<string, any>
+  
+  for (const [type, requirements] of Object.entries(electives)) {
+    const required = requirements.required || 0
+    // TODO: Implement logic to count completed electives by type
+    // This requires additional tables to categorize courses as TE/CSE/NSE
+    
+    progress[type] = {
+      required,
+      completed: 0, // Placeholder - needs course categorization
+      remaining: required,
+      details: requirements.description
+    }
+  }
+  
+  return progress
+}
+
