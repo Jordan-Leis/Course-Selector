@@ -49,6 +49,7 @@ export default function PlanBuilderPage() {
   const [selectedTermIndex, setSelectedTermIndex] = useState<number | null>(null)
   const [warnings, setWarnings] = useState<ValidationWarning[]>([])
   const [validating, setValidating] = useState(false)
+  const [programTemplate, setProgramTemplate] = useState<any | null>(null)
 
   const loadPlan = useCallback(async () => {
     if (!supabase) {
@@ -121,6 +122,20 @@ export default function PlanBuilderPage() {
         name: typedPlanData.name,
         terms: termsWithCourses,
       })
+
+      // Load program template if plan has a program_code
+      const planDataAny = typedPlanData as any
+      if (planDataAny.program_code) {
+        const { data: template } = await supabase
+          .from('program_templates')
+          .select('*')
+          .eq('program_code', planDataAny.program_code)
+          .single()
+        
+        if (template) {
+          setProgramTemplate(template as any)
+        }
+      }
     } catch (error) {
       console.error('Error loading plan:', error)
       router.push('/dashboard')
@@ -447,6 +462,7 @@ export default function PlanBuilderPage() {
                   selectedTermIndex === term.term_index ? null : term.term_index
                 )
               }
+              programTemplate={programTemplate}
             />
           ))}
         </div>

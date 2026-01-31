@@ -34,6 +34,7 @@ export default function AdminSettingsPage() {
 
   useEffect(() => {
     loadUserData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const loadUserData = async () => {
@@ -56,9 +57,10 @@ export default function AdminSettingsPage() {
         .eq('user_id', user.id)
         .single()
 
-      if (profile) {
-        setCurrentProgram(profile.program || 'Not set')
-        setSelectedProgram(profile.program || '')
+      if (profile && profile as any) {
+        const typedProfile = profile as { program: string | null }
+        setCurrentProgram(typedProfile.program || 'Not set')
+        setSelectedProgram(typedProfile.program || '')
       }
 
       // Get admin role
@@ -68,8 +70,9 @@ export default function AdminSettingsPage() {
         .eq('user_id', user.id)
         .single()
 
-      if (adminUser) {
-        setAdminRole(adminUser.role)
+      if (adminUser && adminUser as any) {
+        const typedAdmin = adminUser as { role: string }
+        setAdminRole(typedAdmin.role)
       }
 
     } catch (error) {
@@ -98,6 +101,7 @@ export default function AdminSettingsPage() {
       // Update profile
       const { error } = await supabase
         .from('profiles')
+        // @ts-expect-error - RLS type inference issue
         .update({ program: selectedProgram })
         .eq('user_id', user.id)
 

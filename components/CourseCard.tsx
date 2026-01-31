@@ -2,6 +2,7 @@
 
 import { Database } from '@/lib/supabase/types'
 import { parsePrerequisites, getPrerequisiteDescription } from '@/lib/prerequisite-parser'
+import { getCourseType } from '@/lib/course-type-classifier'
 import { useState } from 'react'
 
 type Course = Database['public']['Tables']['courses']['Row']
@@ -9,6 +10,8 @@ type Course = Database['public']['Tables']['courses']['Row']
 interface CourseCardProps {
   course: Course
   onRemove: () => void
+  programTemplate?: any | null
+  termIndex?: number
 }
 
 // Generate a consistent color based on subject code
@@ -26,9 +29,12 @@ function getSubjectColor(subject: string): string {
   return colors[hash % colors.length]
 }
 
-export default function CourseCard({ course, onRemove }: CourseCardProps) {
+export default function CourseCard({ course, onRemove, programTemplate = null, termIndex = 0 }: CourseCardProps) {
   const gradientColor = getSubjectColor(course.subject)
   const [showPrereqs, setShowPrereqs] = useState(false)
+  
+  // Get course type classification
+  const courseType = getCourseType(course.code || '', programTemplate, termIndex)
   
   // Parse prerequisites
   const prereqData = course.has_prerequisites && course.prerequisites_raw 
@@ -44,10 +50,16 @@ export default function CourseCard({ course, onRemove }: CourseCardProps) {
         <div className="flex justify-between items-start gap-2">
           <div className="flex-1 min-w-0">
             {/* Course code with gradient background */}
-            <div className="flex items-center gap-2 mb-2">
+            <div className="flex items-center gap-2 mb-2 flex-wrap">
               <span className={`inline-block px-2.5 py-0.5 rounded-md bg-gradient-to-r ${gradientColor} text-white text-xs font-semibold shadow-sm`}>
                 {course.code || `${course.subject} ${course.catalog_number}`}
               </span>
+              {/* Course type badge */}
+              {programTemplate && (
+                <span className={`inline-block px-2 py-0.5 rounded-md text-xs font-semibold border ${courseType.colorClasses}`}>
+                  {courseType.label}
+                </span>
+              )}
               {course.units && (
                 <span className="text-xs text-gray-500 font-medium">
                   {course.units} {course.units === 1 ? 'unit' : 'units'}

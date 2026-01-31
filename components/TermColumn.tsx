@@ -17,6 +17,7 @@ interface TermColumnProps {
   onRemoveCourse: (planTermCourseId: string) => void
   isSelected: boolean
   onSelect: () => void
+  programTemplate?: any | null
 }
 
 export default function TermColumn({
@@ -26,6 +27,7 @@ export default function TermColumn({
   onRemoveCourse,
   isSelected,
   onSelect,
+  programTemplate = null,
 }: TermColumnProps) {
   const totalUnits = courses.reduce((sum, tc) => sum + (tc.course.units || 0), 0)
   const isOverloaded = totalUnits > 6
@@ -107,6 +109,8 @@ export default function TermColumn({
               key={termCourse.id}
               course={termCourse.course}
               onRemove={() => onRemoveCourse(termCourse.id)}
+              programTemplate={programTemplate}
+              termIndex={termIndex}
             />
           ))
         )}

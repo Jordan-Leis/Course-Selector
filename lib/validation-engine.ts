@@ -169,13 +169,19 @@ async function checkPrerequisites(
           details: 'You must complete the required courses in an earlier term.',
         })
       } else if (prereq.type === 'level') {
-        warnings.push({
-          type: 'level',
-          severity: 'warning',
-          courseCode: course.code || '',
-          message: `Level requirement: ${description}`,
-          details: 'Make sure you meet the level requirement for this course.',
-        })
+        // Check if course is in appropriate term based on level requirement
+        const requiredLevel = prereq.level || ''
+        const currentTerm = getTermLabel(currentTermIndex)
+        
+        if (requiredLevel && !isTermSatisfiesLevel(currentTerm, requiredLevel)) {
+          warnings.push({
+            type: 'level',
+            severity: 'warning',
+            courseCode: course.code || '',
+            message: `Level requirement: ${description}`,
+            details: `This course requires ${requiredLevel} or higher. You need faculty override to take it in ${currentTerm}.`,
+          })
+        }
       } else if (prereq.type === 'corequisite') {
         warnings.push({
           type: 'corequisite',
@@ -189,6 +195,34 @@ async function checkPrerequisites(
   }
 
   return { errors, warnings }
+}
+
+/**
+ * Get term label from index (0=1A, 1=1B, 2=2A, etc.)
+ */
+function getTermLabel(termIndex: number): string {
+  const year = Math.floor(termIndex / 2) + 1
+  const semester = termIndex % 2 === 0 ? 'A' : 'B'
+  return `${year}${semester}`
+}
+
+/**
+ * Check if current term satisfies level requirement
+ * e.g., placing a 3A-required course in 3A or later is OK
+ */
+function isTermSatisfiesLevel(currentTerm: string, requiredLevel: string): boolean {
+  const termToNumber = (term: string): number => {
+    const match = term.match(/^(\d+)([AB])$/)
+    if (!match) return 0
+    const year = parseInt(match[1])
+    const semester = match[2] === 'A' ? 0 : 1
+    return year * 2 + semester - 2 // 1A=0, 1B=1, 2A=2, etc.
+  }
+  
+  const currentNum = termToNumber(currentTerm)
+  const requiredNum = termToNumber(requiredLevel)
+  
+  return currentNum >= requiredNum
 }
 
 /**
@@ -237,7 +271,7 @@ async function checkAntirequisites(
 }
 
 /**
- * Check if term has too many units
+ * Check if term has too many courses (not units)
  */
 function checkTermOverload(
   planTerms: Array<PlanTerm & { courses: Array<PlanTermCourse & { course: Course }> }>,
@@ -247,19 +281,17 @@ function checkTermOverload(
   const term = planTerms.find(t => t.term_index === termIndex)
   if (!term) return null
 
-  let totalUnits = Number(newCourse.units) || 0.5
-  for (const ptc of term.courses) {
-    totalUnits += Number(ptc.course.units) || 0.5
-  }
-
-  // Typical term is 5-6 courses = 2.5-3.0 units
-  if (totalUnits > 3.0) {
+  // Count courses instead of units (more intuitive)
+  const courseCount = term.courses.length + 1 // +1 for new course
+  
+  // Standard full-time load is 5-6 courses, overload is 7+
+  if (courseCount > 6) {
     return {
       type: 'overload',
       severity: 'warning',
       courseCode: newCourse.code || '',
-      message: `Term overload: ${totalUnits.toFixed(1)} units`,
-      details: 'This term has more than the typical 3.0 units (6 courses). Consider redistributing courses.',
+      message: `Term overload: ${courseCount} courses`,
+      details: 'This term has more than 6 courses. Consider redistributing courses to maintain balance.',
     }
   }
 
