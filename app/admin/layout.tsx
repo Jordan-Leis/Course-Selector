@@ -46,6 +46,12 @@ export default async function AdminLayout({
             
             <div className="flex items-center gap-3">
               <Link
+                href="/admin/settings"
+                className="px-4 py-2 text-sm text-gray-700 hover:text-gray-900 font-medium hover:bg-gray-100 rounded-lg transition-all"
+              >
+                Settings
+              </Link>
+              <Link
                 href="/dashboard"
                 className="px-4 py-2 text-sm text-gray-700 hover:text-gray-900 font-medium hover:bg-gray-100 rounded-lg transition-all"
               >
