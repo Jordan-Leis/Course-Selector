@@ -9,6 +9,7 @@ import { Database } from '@/lib/supabase/types'
 import CourseSearch from '@/components/CourseSearch'
 import TermColumn from '@/components/TermColumn'
 import Link from 'next/link'
+import { validateCourseAddition, validateEntirePlan, ValidationWarning } from '@/lib/validation-engine'
 
 type Course = Database['public']['Tables']['courses']['Row']
 type PlanTerm = Database['public']['Tables']['plan_terms']['Row']
@@ -46,7 +47,8 @@ export default function PlanBuilderPage() {
   const [editingName, setEditingName] = useState(false)
   const [loading, setLoading] = useState(true)
   const [selectedTermIndex, setSelectedTermIndex] = useState<number | null>(null)
-  const [warnings, setWarnings] = useState<{ type: string; message: string }[]>([])
+  const [warnings, setWarnings] = useState<ValidationWarning[]>([])
+  const [validating, setValidating] = useState(false)
 
   const loadPlan = useCallback(async () => {
     if (!supabase) {
@@ -127,50 +129,27 @@ export default function PlanBuilderPage() {
     }
   }, [planId, supabase, router])
 
-  const calculateWarnings = useCallback(() => {
+  const calculateWarnings = useCallback(async () => {
     if (!plan) return
 
-    const warningsList: { type: string; message: string }[] = []
-    const courseCounts = new Map<string, number[]>() // course_id -> term indices
-
-    // Check for duplicate courses
-    plan.terms.forEach((term) => {
-      term.courses.forEach((termCourse) => {
-        const courseId = termCourse.course_id
-        if (!courseCounts.has(courseId)) {
-          courseCounts.set(courseId, [])
-        }
-        courseCounts.get(courseId)!.push(term.term_index)
-      })
-    })
-
-    courseCounts.forEach((termIndices, courseId) => {
-      if (termIndices.length > 1) {
-        const course = plan.terms
-          .flatMap((t) => t.courses)
-          .find((tc) => tc.course_id === courseId)?.course
-        if (course) {
-          warningsList.push({
-            type: 'duplicate',
-            message: `${course.code || `${course.subject} ${course.catalog_number}`} appears in multiple terms`,
-          })
-        }
-      }
-    })
-
-    // Check for unit overload (>6 units per term)
-    plan.terms.forEach((term) => {
-      const totalUnits = term.courses.reduce((sum, tc) => sum + (tc.course.units || 0), 0)
-      if (totalUnits > 6) {
-        warningsList.push({
-          type: 'overload',
-          message: `${term.label} has ${totalUnits} units (overload warning: >6 units)`,
-        })
-      }
-    })
-
-    setWarnings(warningsList)
-  }, [plan])
+    setValidating(true)
+    try {
+      // Use the new validation engine
+      const result = await validateEntirePlan(planId)
+      
+      // Combine errors and warnings
+      const allWarnings: ValidationWarning[] = [
+        ...result.errors,
+        ...result.warnings,
+      ]
+      
+      setWarnings(allWarnings)
+    } catch (error) {
+      console.error('Error validating plan:', error)
+    } finally {
+      setValidating(false)
+    }
+  }, [plan, planId])
 
   useEffect(() => {
     loadPlan()
@@ -207,6 +186,23 @@ export default function PlanBuilderPage() {
     if (selectedTermIndex === null || !supabase) return
 
     try {
+      // First, validate if this course can be added
+      const validation = await validateCourseAddition(planId, selectedTermIndex, course)
+      
+      // Show errors if any
+      if (!validation.isValid && validation.errors.length > 0) {
+        const errorMessages = validation.errors.map(e => e.message).join('\n')
+        alert(`Cannot add course:\n\n${errorMessages}`)
+        return
+      }
+      
+      // Show warnings but allow adding
+      if (validation.warnings.length > 0) {
+        const warningMessages = validation.warnings.map(w => w.message).join('\n')
+        const confirmed = confirm(`Warning:\n\n${warningMessages}\n\nDo you want to add this course anyway?`)
+        if (!confirmed) return
+      }
+      
       const term = plan?.terms.find((t) => t.term_index === selectedTermIndex)
       if (!term) return
 
@@ -342,27 +338,76 @@ export default function PlanBuilderPage() {
       <main className="max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Warnings Section */}
         {warnings.length > 0 && (
-          <div className="mb-6 bg-gradient-to-r from-amber-50 to-yellow-50 border-2 border-amber-200 rounded-xl p-5 shadow-lg animate-in slide-in-from-top duration-300">
-            <div className="flex items-start gap-3">
-              <div className="flex-shrink-0 w-10 h-10 bg-amber-100 rounded-full flex items-center justify-center">
-                <svg className="w-6 h-6 text-amber-600" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+          <div className="mb-6 space-y-3">
+            {/* Errors */}
+            {warnings.filter(w => w.severity === 'error').length > 0 && (
+              <div className="bg-gradient-to-r from-red-50 to-rose-50 border-2 border-red-200 rounded-xl p-5 shadow-lg">
+                <div className="flex items-start gap-3">
+                  <div className="flex-shrink-0 w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
+                    <svg className="w-6 h-6 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-bold text-red-900 mb-2 text-lg">Errors Found</h3>
+                    <p className="text-red-700 text-sm mb-3">These issues must be resolved before your plan is valid.</p>
+                    <ul className="space-y-2">
+                      {warnings.filter(w => w.severity === 'error').map((warning, idx) => (
+                        <li key={idx} className="bg-white/50 rounded-lg p-3">
+                          <div className="flex items-start gap-2">
+                            <span className="text-red-600 font-mono text-sm font-semibold">{warning.courseCode}</span>
+                            <span className="text-red-800 text-sm flex-1">{warning.message}</span>
+                          </div>
+                          {warning.details && (
+                            <p className="text-red-600 text-xs mt-1 ml-2 pl-2 border-l-2 border-red-300">{warning.details}</p>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            )}
+            
+            {/* Warnings */}
+            {warnings.filter(w => w.severity === 'warning').length > 0 && (
+              <div className="bg-gradient-to-r from-amber-50 to-yellow-50 border-2 border-amber-200 rounded-xl p-5 shadow-lg">
+                <div className="flex items-start gap-3">
+                  <div className="flex-shrink-0 w-10 h-10 bg-amber-100 rounded-full flex items-center justify-center">
+                    <svg className="w-6 h-6 text-amber-600" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-bold text-amber-900 mb-2 text-lg">Warnings</h3>
+                    <p className="text-amber-700 text-sm mb-3">These issues should be reviewed but won't prevent plan submission.</p>
+                    <ul className="space-y-2">
+                      {warnings.filter(w => w.severity === 'warning').map((warning, idx) => (
+                        <li key={idx} className="bg-white/50 rounded-lg p-3">
+                          <div className="flex items-start gap-2">
+                            <span className="text-amber-600 font-mono text-sm font-semibold">{warning.courseCode}</span>
+                            <span className="text-amber-800 text-sm flex-1">{warning.message}</span>
+                          </div>
+                          {warning.details && (
+                            <p className="text-amber-600 text-xs mt-1 ml-2 pl-2 border-l-2 border-amber-300">{warning.details}</p>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            )}
+            
+            {validating && (
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 flex items-center gap-2 text-blue-700 text-sm">
+                <svg className="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
+                <span>Validating prerequisites...</span>
               </div>
-              <div className="flex-1">
-                <h3 className="font-bold text-amber-900 mb-2 text-lg">Plan Warnings</h3>
-                <ul className="space-y-2">
-                  {warnings.map((warning, idx) => (
-                    <li key={idx} className="flex items-start gap-2 text-amber-800">
-                      <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clipRule="evenodd" />
-                      </svg>
-                      <span className="font-medium">{warning.message}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
+            )}
           </div>
         )}
 

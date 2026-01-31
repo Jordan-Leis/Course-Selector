@@ -13,20 +13,26 @@
  *   SUPABASE_SERVICE_ROLE_KEY - Service role key (for admin operations)
  */
 
+// Load environment variables from .env.local
+import { config } from 'dotenv'
+import { resolve } from 'path'
+config({ path: resolve(__dirname, '../.env.local') })
+
 import { createClient } from '@supabase/supabase-js'
+import { parsePrerequisites } from '../lib/prerequisite-parser'
 
 // UW Open Data API base URL
 const UW_API_BASE = 'https://openapi.data.uwaterloo.ca/v3'
 
-// Terms to check (format: YYYYMM, e.g., 202401 for Winter 2024)
-// Check current academic year (3 terms: Fall, Winter, Spring)
+// Terms to check (format: 1YYT where YY is last 2 digits of year, T is term)
+// e.g., 1251 = Winter 2025, 1249 = Fall 2024
+// Term codes: 1=Winter, 5=Spring, 9=Fall
 function getRecentTerms(): string[] {
   const terms: string[] = []
   const now = new Date()
   const currentYear = now.getFullYear()
   const currentMonth = now.getMonth() + 1 // 1-12
   
-  // UW terms: 1=Winter, 5=Spring, 9=Fall
   // Calculate current term
   let term: number
   if (currentMonth >= 1 && currentMonth < 5) {
@@ -37,12 +43,14 @@ function getRecentTerms(): string[] {
     term = 9 // Fall
   }
   
-  // Generate last 3 terms (current academic year)
+  // Generate last 3 terms
   let year = currentYear
   let termCode = term
   
   for (let i = 0; i < 3; i++) {
-    const termStr = `${year}${String(termCode).padStart(2, '0')}`
+    // Format: 1 + last 2 digits of year + term digit
+    const yearSuffix = String(year).slice(-2)
+    const termStr = `1${yearSuffix}${termCode}`
     terms.push(termStr)
     
     // Move to previous term
@@ -57,11 +65,11 @@ function getRecentTerms(): string[] {
 }
 
 interface UWCourse {
-  subject: string
+  subjectCode: string
   catalogNumber: string
-  catalog_number?: string  // Alternative field name
   title: string
   description?: string
+  requirementsDescription?: string
   units?: number
   unit?: number  // Alternative field name
 }
@@ -142,9 +150,8 @@ async function syncCourses() {
       
       // Track each course with the most recent term it appeared in
       for (const course of courses) {
-        // Handle different field name variations
-        const catalogNum = course.catalogNumber || course.catalog_number || ''
-        const subject = course.subject || ''
+        const catalogNum = course.catalogNumber || ''
+        const subject = course.subjectCode || ''
         
         if (!subject || !catalogNum) {
           console.warn(`  Skipping course with missing subject/catalog:`, course)
@@ -156,10 +163,11 @@ async function syncCourses() {
         
         // Normalize course data
         const normalizedCourse: UWCourse = {
-          subject,
+          subjectCode: subject,
           catalogNumber: catalogNum,
           title: course.title || '',
           description: course.description,
+          requirementsDescription: course.requirementsDescription,
           units: course.units || course.unit,
         }
         
@@ -190,24 +198,33 @@ async function syncCourses() {
   const { error: inactiveError } = await supabase
     .from('courses')
     .update({ active: false })
+    .neq('id', '00000000-0000-0000-0000-000000000000') // Dummy condition to satisfy WHERE requirement
   
   if (inactiveError) {
     throw new Error(`Failed to mark courses inactive: ${inactiveError.message}`)
   }
   
   // Process each seen course
+  let prerequisitesProcessed = 0
+  
   for (const [key, { course, lastTerm }] of seenCourses.entries()) {
-    const code = `${course.subject} ${course.catalogNumber}`
+    const code = `${course.subjectCode} ${course.catalogNumber}`
+    
+    // Parse prerequisites
+    const prereqData = parsePrerequisites(course.requirementsDescription)
     
     // Check if course exists
     const { data: existing } = await supabase
       .from('courses')
       .select('id')
-      .eq('subject', course.subject)
+      .eq('subject', course.subjectCode)
       .eq('catalog_number', course.catalogNumber)
       .single()
     
+    let courseId: string | null = null
+    
     if (existing) {
+      courseId = existing.id
       // Update existing course
       const { error } = await supabase
         .from('courses')
@@ -218,6 +235,8 @@ async function syncCourses() {
           description: course.description || null,
           units: course.units || null,
           code: code,
+          prerequisites_raw: course.requirementsDescription || null,
+          has_prerequisites: prereqData.hasPrerequisites,
         })
         .eq('id', existing.id)
       
@@ -228,10 +247,10 @@ async function syncCourses() {
       }
     } else {
       // Insert new course
-      const { error } = await supabase
+      const { data: newCourse, error } = await supabase
         .from('courses')
         .insert({
-          subject: course.subject,
+          subject: course.subjectCode,
           catalog_number: course.catalogNumber,
           code: code,
           title: course.title,
@@ -239,13 +258,59 @@ async function syncCourses() {
           units: course.units || null,
           active: true,
           last_seen_term: lastTerm,
+          prerequisites_raw: course.requirementsDescription || null,
+          has_prerequisites: prereqData.hasPrerequisites,
         })
+        .select('id')
+        .single()
       
       if (error) {
         console.error(`  Error inserting ${code}:`, error.message)
       } else {
         inserted++
+        courseId = newCourse?.id || null
       }
+    }
+    
+    // Store parsed prerequisites if we have a course ID
+    if (courseId && prereqData.hasPrerequisites) {
+      // Delete existing prerequisites for this course
+      await supabase
+        .from('course_prerequisites')
+        .delete()
+        .eq('course_id', courseId)
+      
+      // Insert new prerequisites
+      for (const prereq of prereqData.prerequisites) {
+        const prereqRecord: any = {
+          course_id: courseId,
+          prerequisite_type: prereq.type,
+          operator: prereq.operator || null,
+          required_level: prereq.level || null,
+          raw_text: prereq.rawText,
+          group_id: prereq.groupId || 0,
+        }
+        
+        // For course prerequisites, store course codes
+        if (prereq.type === 'course' && prereq.courses && prereq.courses.length > 0) {
+          // Store the first course as required_course_code
+          // For multiple courses (OR/AND), we'll create multiple records
+          for (const courseCode of prereq.courses) {
+            await supabase
+              .from('course_prerequisites')
+              .insert({
+                ...prereqRecord,
+                required_course_code: courseCode,
+              })
+          }
+        } else {
+          await supabase
+            .from('course_prerequisites')
+            .insert(prereqRecord)
+        }
+      }
+      
+      prerequisitesProcessed++
     }
   }
   
@@ -262,6 +327,7 @@ async function syncCourses() {
   console.log(`   ➕ Inserted: ${inserted} new courses`)
   console.log(`   ❌ Marked inactive: ${markedInactive} courses`)
   console.log(`   ✅ Active courses: ${seenCourses.size}`)
+  console.log(`   🔗 Prerequisites processed: ${prerequisitesProcessed} courses`)
 }
 
 // Run the sync

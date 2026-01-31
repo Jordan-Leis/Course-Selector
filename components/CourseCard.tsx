@@ -1,6 +1,8 @@
 'use client'
 
 import { Database } from '@/lib/supabase/types'
+import { parsePrerequisites, getPrerequisiteDescription } from '@/lib/prerequisite-parser'
+import { useState } from 'react'
 
 type Course = Database['public']['Tables']['courses']['Row']
 
@@ -26,6 +28,12 @@ function getSubjectColor(subject: string): string {
 
 export default function CourseCard({ course, onRemove }: CourseCardProps) {
   const gradientColor = getSubjectColor(course.subject)
+  const [showPrereqs, setShowPrereqs] = useState(false)
+  
+  // Parse prerequisites
+  const prereqData = course.has_prerequisites && course.prerequisites_raw 
+    ? parsePrerequisites(course.prerequisites_raw)
+    : null
 
   return (
     <div className="group relative bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100">
@@ -45,12 +53,39 @@ export default function CourseCard({ course, onRemove }: CourseCardProps) {
                   {course.units} {course.units === 1 ? 'unit' : 'units'}
                 </span>
               )}
+              {/* Prerequisite indicator */}
+              {prereqData && prereqData.hasPrerequisites && (
+                <button
+                  onClick={() => setShowPrereqs(!showPrereqs)}
+                  className="text-xs text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1"
+                  title="View prerequisites"
+                >
+                  <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                  </svg>
+                  Prereqs
+                </button>
+              )}
             </div>
             
             {/* Course title */}
             <div className="text-sm text-gray-700 leading-snug font-medium line-clamp-2">
               {course.title}
             </div>
+            
+            {/* Prerequisites details */}
+            {showPrereqs && prereqData && prereqData.hasPrerequisites && (
+              <div className="mt-2 pt-2 border-t border-gray-200">
+                <div className="text-xs space-y-1">
+                  {prereqData.prerequisites.map((prereq, idx) => (
+                    <div key={idx} className="flex items-start gap-1">
+                      <span className="text-blue-600 font-semibold">•</span>
+                      <span className="text-gray-600">{getPrerequisiteDescription(prereq)}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
           
           {/* Remove button with hover effect */}

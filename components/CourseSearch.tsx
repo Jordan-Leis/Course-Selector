@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { Database } from '@/lib/supabase/types'
+import { parsePrerequisites, getPrerequisiteDescription } from '@/lib/prerequisite-parser'
 
 type Course = Database['public']['Tables']['courses']['Row']
 
@@ -145,6 +146,10 @@ export default function CourseSearch({ onSelectCourse, selectedTermIndex }: Cour
           <div className="mt-4 max-h-80 overflow-y-auto space-y-2 pr-1">
             {results.map((course) => {
               const gradientColor = getSubjectColor(course.subject)
+              const prereqData = course.has_prerequisites && course.prerequisites_raw
+                ? parsePrerequisites(course.prerequisites_raw)
+                : null
+              
               return (
                 <button
                   key={course.id}
@@ -162,10 +167,30 @@ export default function CourseSearch({ onSelectCourse, selectedTermIndex }: Cour
                       </span>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="font-semibold text-gray-900 group-hover:text-blue-700 transition-colors">
-                        {course.code || `${course.subject} ${course.catalog_number}`}
+                      <div className="flex items-center gap-2">
+                        <span className="font-semibold text-gray-900 group-hover:text-blue-700 transition-colors">
+                          {course.code || `${course.subject} ${course.catalog_number}`}
+                        </span>
+                        {prereqData && prereqData.hasPrerequisites && (
+                          <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-medium">
+                            Has Prereqs
+                          </span>
+                        )}
                       </div>
                       <div className="text-sm text-gray-600 mt-1 line-clamp-2">{course.title}</div>
+                      {prereqData && prereqData.hasPrerequisites && (
+                        <div className="text-xs text-gray-500 mt-1.5 space-y-0.5">
+                          {prereqData.prerequisites.slice(0, 2).map((prereq, idx) => (
+                            <div key={idx} className="flex items-start gap-1">
+                              <span className="text-blue-600">•</span>
+                              <span className="line-clamp-1">{getPrerequisiteDescription(prereq)}</span>
+                            </div>
+                          ))}
+                          {prereqData.prerequisites.length > 2 && (
+                            <div className="text-blue-600">+{prereqData.prerequisites.length - 2} more...</div>
+                          )}
+                        </div>
+                      )}
                       {course.units && (
                         <div className="text-xs text-gray-500 mt-1.5 font-medium">
                           {course.units} {course.units === 1 ? 'unit' : 'units'}
