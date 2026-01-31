@@ -190,10 +190,6 @@ async function syncCourses() {
   // Update database
   console.log('💾 Updating database...')
   
-  let updated = 0
-  let markedInactive = 0
-  let inserted = 0
-  
   // Mark all courses as inactive first
   const { error: inactiveError } = await supabase
     .from('courses')
@@ -205,129 +201,183 @@ async function syncCourses() {
   }
   
   // Process each seen course
-  let prerequisitesProcessed = 0
+  console.log(`📝 Preparing ${seenCourses.size} courses for upsert...`)
   
-  for (const [key, { course, lastTerm }] of seenCourses.entries()) {
+  // Build array of courses to upsert
+  const coursesToUpsert = Array.from(seenCourses.entries()).map(([key, { course, lastTerm }]) => {
     const code = `${course.subjectCode} ${course.catalogNumber}`
-    
-    // Parse prerequisites
     const prereqData = parsePrerequisites(course.requirementsDescription)
     
-    // Check if course exists
-    const { data: existing } = await supabase
-      .from('courses')
-      .select('id')
-      .eq('subject', course.subjectCode)
-      .eq('catalog_number', course.catalogNumber)
-      .single()
-    
-    let courseId: string | null = null
-    
-    if (existing) {
-      courseId = existing.id
-      // Update existing course
-      const { error } = await supabase
-        .from('courses')
-        .update({
-          active: true,
-          last_seen_term: lastTerm,
-          title: course.title,
-          description: course.description || null,
-          units: course.units || null,
-          code: code,
-          prerequisites_raw: course.requirementsDescription || null,
-          has_prerequisites: prereqData.hasPrerequisites,
-        })
-        .eq('id', existing.id)
-      
-      if (error) {
-        console.error(`  Error updating ${code}:`, error.message)
-      } else {
-        updated++
-      }
-    } else {
-      // Insert new course
-      const { data: newCourse, error } = await supabase
-        .from('courses')
-        .insert({
-          subject: course.subjectCode,
-          catalog_number: course.catalogNumber,
-          code: code,
-          title: course.title,
-          description: course.description || null,
-          units: course.units || null,
-          active: true,
-          last_seen_term: lastTerm,
-          prerequisites_raw: course.requirementsDescription || null,
-          has_prerequisites: prereqData.hasPrerequisites,
-        })
-        .select('id')
-        .single()
-      
-      if (error) {
-        console.error(`  Error inserting ${code}:`, error.message)
-      } else {
-        inserted++
-        courseId = newCourse?.id || null
-      }
+    return {
+      subject: course.subjectCode,
+      catalog_number: course.catalogNumber,
+      code: code,
+      title: course.title,
+      description: course.description || null,
+      units: course.units || null,
+      active: true,
+      last_seen_term: lastTerm,
+      prerequisites_raw: course.requirementsDescription || null,
+      has_prerequisites: prereqData.hasPrerequisites,
     }
+  })
+  
+  // Batch upsert all courses at once
+  console.log('💾 Upserting courses in batches...')
+  const BATCH_SIZE = 500
+  let totalUpserted = 0
+  
+  for (let i = 0; i < coursesToUpsert.length; i += BATCH_SIZE) {
+    const batch = coursesToUpsert.slice(i, i + BATCH_SIZE)
+    const batchNum = Math.floor(i / BATCH_SIZE) + 1
+    const totalBatches = Math.ceil(coursesToUpsert.length / BATCH_SIZE)
     
-    // Store parsed prerequisites if we have a course ID
-    if (courseId && prereqData.hasPrerequisites) {
-      // Delete existing prerequisites for this course
-      await supabase
-        .from('course_prerequisites')
-        .delete()
-        .eq('course_id', courseId)
-      
-      // Insert new prerequisites
-      for (const prereq of prereqData.prerequisites) {
-        const prereqRecord: any = {
-          course_id: courseId,
-          prerequisite_type: prereq.type,
-          operator: prereq.operator || null,
-          required_level: prereq.level || null,
-          raw_text: prereq.rawText,
-          group_id: prereq.groupId || 0,
-        }
-        
-        // For course prerequisites, store course codes
-        if (prereq.type === 'course' && prereq.courses && prereq.courses.length > 0) {
-          // Store the first course as required_course_code
-          // For multiple courses (OR/AND), we'll create multiple records
-          for (const courseCode of prereq.courses) {
-            await supabase
-              .from('course_prerequisites')
-              .insert({
-                ...prereqRecord,
-                required_course_code: courseCode,
-              })
-          }
-        } else {
-          await supabase
-            .from('course_prerequisites')
-            .insert(prereqRecord)
-        }
-      }
-      
-      prerequisitesProcessed++
+    console.log(`   Batch ${batchNum}/${totalBatches} (${batch.length} courses)...`)
+    
+    const { error } = await supabase
+      .from('courses')
+      .upsert(batch, { 
+        onConflict: 'subject,catalog_number',
+        ignoreDuplicates: false 
+      })
+    
+    if (error) {
+      console.error(`   ❌ Batch ${batchNum} failed:`, error.message)
+    } else {
+      totalUpserted += batch.length
+      console.log(`   ✅ Batch ${batchNum} complete`)
     }
   }
   
-  // Count inactive courses
+  console.log(`✅ Upserted ${totalUpserted} courses\n`)
+  
+  // Now handle prerequisites in batches
+  console.log('🔗 Processing prerequisites...')
+  
+  // First, get all course IDs for courses that have prerequisites
+  const coursesWithPrereqs = Array.from(seenCourses.entries())
+    .filter(([_, { course }]) => course.requirementsDescription)
+    .map(([_, { course }]) => ({
+      subject: course.subjectCode,
+      catalog_number: course.catalogNumber,
+      requirements: course.requirementsDescription
+    }))
+  
+  console.log(`   Found ${coursesWithPrereqs.length} courses with prerequisites`)
+  
+  // Get course IDs from database
+  const { data: courseIds } = await supabase
+    .from('courses')
+    .select('id, subject, catalog_number')
+    .in('subject', [...new Set(coursesWithPrereqs.map(c => c.subject))])
+  
+  if (!courseIds) {
+    console.log('   ⚠️  Could not fetch course IDs, skipping prerequisites')
+    return
+  }
+  
+  // Create a map for fast lookup
+  const courseIdMap = new Map(
+    courseIds.map(c => [`${c.subject}|${c.catalog_number}`, c.id])
+  )
+  
+  // Build all prerequisite records
+  console.log('   Parsing and building prerequisite records...')
+  const allPrereqRecords: any[] = []
+  let prerequisitesProcessed = 0
+  
+  for (const course of coursesWithPrereqs) {
+    const courseId = courseIdMap.get(`${course.subject}|${course.catalog_number}`)
+    if (!courseId) continue
+    
+    const prereqData = parsePrerequisites(course.requirements)
+    if (!prereqData.hasPrerequisites) continue
+    
+    for (const prereq of prereqData.prerequisites) {
+      const prereqRecord: any = {
+        course_id: courseId,
+        prerequisite_type: prereq.type,
+        operator: prereq.operator || null,
+        required_level: prereq.level || null,
+        raw_text: prereq.rawText,
+        group_id: prereq.groupId || 0,
+      }
+      
+      // For course prerequisites, create a record for each course
+      if (prereq.type === 'course' && prereq.courses && prereq.courses.length > 0) {
+        for (const courseCode of prereq.courses) {
+          allPrereqRecords.push({
+            ...prereqRecord,
+            required_course_code: courseCode,
+          })
+        }
+      } else {
+        allPrereqRecords.push(prereqRecord)
+      }
+    }
+    
+    prerequisitesProcessed++
+    if (prerequisitesProcessed % 1000 === 0) {
+      console.log(`   Processed ${prerequisitesProcessed}/${coursesWithPrereqs.length} courses...`)
+    }
+  }
+  
+  console.log(`   Built ${allPrereqRecords.length} prerequisite records`)
+  
+  // Delete all existing prerequisites for courses we're updating
+  console.log('   Clearing old prerequisites...')
+  const courseIdsToUpdate = Array.from(courseIdMap.values())
+  
+  // Delete in batches to avoid query limits
+  for (let i = 0; i < courseIdsToUpdate.length; i += BATCH_SIZE) {
+    const batch = courseIdsToUpdate.slice(i, i + BATCH_SIZE)
+    await supabase
+      .from('course_prerequisites')
+      .delete()
+      .in('course_id', batch)
+  }
+  
+  console.log('   ✅ Old prerequisites cleared')
+  
+  // Insert all prerequisites in batches
+  console.log('   Inserting new prerequisites...')
+  let totalPrereqsInserted = 0
+  
+  for (let i = 0; i < allPrereqRecords.length; i += BATCH_SIZE) {
+    const batch = allPrereqRecords.slice(i, i + BATCH_SIZE)
+    const batchNum = Math.floor(i / BATCH_SIZE) + 1
+    const totalBatches = Math.ceil(allPrereqRecords.length / BATCH_SIZE)
+    
+    console.log(`   Batch ${batchNum}/${totalBatches} (${batch.length} prerequisites)...`)
+    
+    const { error } = await supabase
+      .from('course_prerequisites')
+      .insert(batch)
+    
+    if (error) {
+      console.error(`   ❌ Batch ${batchNum} failed:`, error.message)
+    } else {
+      totalPrereqsInserted += batch.length
+      console.log(`   ✅ Batch ${batchNum} complete`)
+    }
+  }
+  
+  console.log(`✅ Inserted ${totalPrereqsInserted} prerequisite records\n`)
+  
+  // Count inactive courses for final report
   const { count } = await supabase
     .from('courses')
     .select('*', { count: 'exact', head: true })
     .eq('active', false)
   
-  markedInactive = count || 0
+  const markedInactive = count || 0
   
   console.log(`\n✨ Sync complete!`)
-  console.log(`   📝 Updated: ${updated} courses`)
-  console.log(`   ➕ Inserted: ${inserted} new courses`)
+  console.log(`   📝 Upserted: ${totalUpserted} courses`)
   console.log(`   ❌ Marked inactive: ${markedInactive} courses`)
   console.log(`   ✅ Active courses: ${seenCourses.size}`)
   console.log(`   🔗 Prerequisites processed: ${prerequisitesProcessed} courses`)
+  console.log(`   📊 Total prerequisite records: ${totalPrereqsInserted}`)
 }
 
 // Run the sync

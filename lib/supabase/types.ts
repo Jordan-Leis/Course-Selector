@@ -53,89 +53,6 @@ export interface Database {
           updated_at?: string
         }
       }
-      profiles: {
-        Row: {
-          user_id: string
-          email: string
-          program: string | null
-          created_at: string
-        }
-        Insert: {
-          user_id: string
-          email: string
-          program?: string | null
-          created_at?: string
-        }
-        Update: {
-          user_id?: string
-          email?: string
-          program?: string | null
-          created_at?: string
-        }
-      }
-      plans: {
-        Row: {
-          id: string
-          user_id: string
-          name: string
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id?: string
-          user_id: string
-          name: string
-          created_at?: string
-          updated_at?: string
-        }
-        Update: {
-          id?: string
-          user_id?: string
-          name?: string
-          created_at?: string
-          updated_at?: string
-        }
-      }
-      plan_terms: {
-        Row: {
-          id: string
-          plan_id: string
-          term_index: number
-          label: string
-        }
-        Insert: {
-          id?: string
-          plan_id: string
-          term_index: number
-          label: string
-        }
-        Update: {
-          id?: string
-          plan_id?: string
-          term_index?: number
-          label?: string
-        }
-      }
-      plan_term_courses: {
-        Row: {
-          id: string
-          plan_term_id: string
-          course_id: string
-          position: number
-        }
-        Insert: {
-          id?: string
-          plan_term_id: string
-          course_id: string
-          position?: number
-        }
-        Update: {
-          id?: string
-          plan_term_id?: string
-          course_id?: string
-          position?: number
-        }
-      }
       course_prerequisites: {
         Row: {
           id: string
@@ -233,6 +150,89 @@ export interface Database {
           program_id?: string
           is_primary?: boolean
           selected_at?: string
+        }
+      }
+      profiles: {
+        Row: {
+          user_id: string
+          email: string
+          program: string | null
+          created_at: string
+        }
+        Insert: {
+          user_id: string
+          email: string
+          program?: string | null
+          created_at?: string
+        }
+        Update: {
+          user_id?: string
+          email?: string
+          program?: string | null
+          created_at?: string
+        }
+      }
+      plans: {
+        Row: {
+          id: string
+          user_id: string
+          name: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          name: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          name?: string
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      plan_terms: {
+        Row: {
+          id: string
+          plan_id: string
+          term_index: number
+          label: string
+        }
+        Insert: {
+          id?: string
+          plan_id: string
+          term_index: number
+          label: string
+        }
+        Update: {
+          id?: string
+          plan_id?: string
+          term_index?: number
+          label?: string
+        }
+      }
+      plan_term_courses: {
+        Row: {
+          id: string
+          plan_term_id: string
+          course_id: string
+          position: number
+        }
+        Insert: {
+          id?: string
+          plan_term_id: string
+          course_id: string
+          position?: number
+        }
+        Update: {
+          id?: string
+          plan_term_id?: string
+          course_id?: string
+          position?: number
         }
       }
     }
