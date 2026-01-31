@@ -1,0 +1,877 @@
+<!-- PageHeader="1/30/26, 6:55 PM" -->
+<!-- PageHeader="Computer Engineering (Bachelor of Applied Science - Honours)" -->
+
+
+# Undergraduate studies
+
+
+## Computer Engineering (Bachelor of Applied Science - Honours)
+
+
+### Systems of Study
+
+Co-operative
+
+
+### Minimum Average(s) Required
+
+· A minimum cumulative overall average of 60.0%.
+
+· A minimum term average of 60.0%. See promotion rules.
+
+
+### Graduation Requirements
+
+· Complete a total of 21.25 units (excluding COOP, PD):
+
+o Complete all the required courses listed below.
+☐
+
+o Complete 13 approved electives:
+☐
+
+· Complete three Complementary Studies Electives (CSEs) from the Complementary Studies Course Lists for Engineering:
+
+. Two courses from List C.
+
+· One course from List A, C, or D.
+
+· Complete two courses from the Natural Science list.
+
+· Complete eight courses from the Technical Electives (TEs) lists.
+
+· Complete one course from the Ethics list (see Additional Constraints).
+
+· Complete all co-operative education program requirements listed below.
+
+
+### Co-operative Education Program Requirements
+
+· Complete a total of five PD courses: PD19, PD20, and three additional PD courses.
+
+· Complete a total of five credited work terms.
+
+· See Bachelor of Applied Science co-operative education program requirements.
+
+
+## Course Requirements
+
+1A Term
+
+A
+
+<!-- PageFooter="https://uwaterloo.ca/academic-calendar/undergraduate-studies/catalog#/programs/BybwJ10Ri3?isPrint=true" -->
+<!-- PageNumber="1/12" -->
+<!-- PageBreak -->
+
+<!-- PageHeader="1/30/26, 6:55 PM" -->
+<!-- PageHeader="Computer Engineering (Bachelor of Applied Science - Honours)" -->
+
+· Complete all of the following
+
+o Complete all the following:
+
+· ECE105 - Classical Mechanics (0.50)
+
+· ECE150 - Fundamentals of Programming (0.50)
+
+· ECE190 - Engineering Profession and Practice (0.25)
+
+· ECE198 - Project Studio (0.25)
+
+· MATH115 - Linear Algebra for Engineering (0.50)
+
+· MATH117 - Calculus 1 for Engineering (0.50)
+
+· Complete 1 of the following:
+
+· COMMST192 - Communication in the Engineering Profession (COMPE, ELE, MGTE) (0.50)
+
+· ENGL192 - Communication in the Engineering Profession (COMPE, ELE, MGTE) (0.50)
+
+
+## 1B Term 1
+
+· Complete all the following:
+
+· ECE102 - Information Session (0.00)
+
+o ECE106 - Electricity and Magnetism (0.50)
+
+o ECE108 - Discrete Mathematics and Logic 1 (0.50)
+
+o ECE124 - Digital Circuits and Systems (0.50)
+
+o ECE140 - Linear Circuits (0.50)
+
+o ECE192 - Engineering Economics and Impact on Society (0.25)
+
+o MATH119 - Calculus 2 for Engineering (0.50)
+
+A
+
+
+## 2A Term
+
+· Complete all of the following
+
+o Complete all the following:
+
+· ECE109 - Materials Chemistry for Engineers (0.25)
+
+· ECE201 - Information Session (0.00)
+
+· ECE204 - Numerical Methods (0.50)
+
+· ECE222 - Digital Computers (0.50)
+
+· ECE240 - Electronic Circuits 1 (0.50)
+
+· ECE250 - Algorithms and Data Structures (0.50)
+
+o Complete 1 of the following:
+
+· ECE205 - Advanced Calculus 1 for Electrical and Computer Engineers (0.50)
+
+· MATH211 - Advanced Calculus 1 for Electrical and Computer Engineers (0.50)
+
+<!-- PageFooter="2B Term" -->
+
+A
+
+<!-- PageFooter="https://uwaterloo.ca/academic-calendar/undergraduate-studies/catalog#/programs/BybwJ10Ri3?isPrint=true" -->
+<!-- PageNumber="2/12" -->
+<!-- PageBreak -->
+
+1/30/26, 6:55 PM
+
+<!-- PageHeader="Computer Engineering (Bachelor of Applied Science - Honours)" -->
+
+· Complete all the following:
+
+o ECE202 - Information Session (0.00)
+☐
+
+o ECE203 - Probability Theory and Statistics 1 (0.50)
+☐
+
+o ECE207 - Signals and Systems (0.50)
+
+o ECE208 - Discrete Mathematics and Logic 2 (0.50)
+☐
+
+o ECE224 - Embedded Microprocessor Systems (0.50)
+☐
+
+o ECE252 - Systems Programming and Concurrency (0.50)
+
+ECE298 - Instrumentation and Prototyping Laboratory (0.25)
+
+A
+
+
+## 3A Term
+
+· Complete all of the following
+
+o Complete all the following:
+☐
+
+· ECE301 - Information Session (0.00)
+
+· ECE318 - Communication Systems (0.50)
+
+· ECE327 - Digital Hardware Systems (0.50)
+
+· ECE350 - Real-Time Operating Systems (0.50)
+
+· ECE380 - Analog Control Systems (0.50)
+
+o Complete 1 approved elective
+☐
+
+A
+
+
+## 3B Term
+
+· Complete all of the following
+
+· Complete all the following:
+☐
+
+· ECE302 - Information Session (0.00)
+
+· ECE307 - Probability Theory and Statistics 2 (0.50)
+
+o Complete 2 Technical Electives from List 1
+☐
+
+o Complete 1 Technical Elective from List 1 or List 2
+
+· Complete 1 approved elective
+
+
+## 4A Term
+
+A
+
+· Complete all of the following
+
+o Complete all the following:
+
+· ECE401 - Information Session (0.00)
+
+o Complete 1 of the following:
+☐
+
+· ECE498A - Engineering Design Project (0.50)
+
+· GENE403 - Interdisciplinary Design Project 1 (0.50)
+
+· Complete 4 approved electives
+
+1
+
+4B Term
+
+<!-- PageFooter="https://uwaterloo.ca/academic-calendar/undergraduate-studies/catalog#/programs/BybwJ10Ri3?isPrint=true" -->
+<!-- PageNumber="3/12" -->
+<!-- PageBreak -->
+
+<!-- PageHeader="1/30/26, 6:55 PM" -->
+<!-- PageHeader="Computer Engineering (Bachelor of Applied Science - Honours)" -->
+
+· Complete all of the following
+
+o Complete all the following:
+☐
+
+· ECE402 - Information Session (0.00)
+
+o Complete 1 of the following:
+☐
+
+· ECE498B - Engineering Design Project (0.50)
+
+· GENE404 - Interdisciplinary Design Project 2 (0.50)
+
+· Complete 4 approved electives
+☐
+
+
+## Course Lists
+
+
+### Ethics List
+
+A
+
+· Complete 1 of the following:
+
+· ARBUS202 - Professional and Business Ethics (0.50)
+☐
+
+o PD22 - Professionalism and Ethics in Engineering Practice (0.50)
+☐
+
+o PHIL215 - Professional and Business Ethics (0.50)
+☐
+
+o PHIL219J - Practical Ethics (0.50)
+☐
+
+o PHIL315 - Ethics and the Engineering Profession (0.50)
+☐
+
+
+# Natural Science List 1
+
+<!-- PageFooter="https://uwaterloo.ca/academic-calendar/undergraduate-studies/catalog#/programs/BybwJ10Ri3?isPrint=true" -->
+<!-- PageNumber="4/12" -->
+<!-- PageBreak -->
+
+1/30/26, 6:55 PM
+
+<!-- PageHeader="Computer Engineering (Bachelor of Applied Science - Honours)" -->
+
+· Complete all of the following
+
+· Complete a total of 2 lecture courses (see Additional Constraints)
+☐
+
+<!-- PageFooter="https://uwaterloo.ca/academic-calendar/undergraduate-studies/catalog#/programs/BybwJ10Ri3?isPrint=true" -->
+<!-- PageNumber="5/12" -->
+<!-- PageBreak -->
+
+1/30/26, 6:55 PM
+
+Computer Engineering (Bachelor of Applied Science - Honours)
+
+
+<table>
+<tr>
+<td colspan="2">o Choose any of the following:</td>
+</tr>
+<tr>
+<td>·</td>
+<td>BIOL110 - Biodiversity, Biomes, and Evolution (0.50)</td>
+</tr>
+<tr>
+<td>.</td>
+<td>BIOL130 - Introductory Cell Biology (0.50)</td>
+</tr>
+<tr>
+<td>.</td>
+<td>BIOL130L - Cell Biology Laboratory (0.25)</td>
+</tr>
+<tr>
+<td></td>
+<td>BIOL150 - Organismal and Evolutionary Ecology (0.50)</td>
+</tr>
+<tr>
+<td>·</td>
+<td>BIOL165 - Diversity of Life (0.50)</td>
+</tr>
+<tr>
+<td>.</td>
+<td>BIOL211 - Introductory Vertebrate Zoology (0.50)</td>
+</tr>
+<tr>
+<td>·</td>
+<td>BIOL220 - Introduction to Plant Structure and Function (0.50)</td>
+</tr>
+<tr>
+<td>·</td>
+<td>BIOL239 - Genetics (0.50)</td>
+</tr>
+<tr>
+<td>·</td>
+<td>BIOL240 - Fundamentals of Microbiology (0.50)</td>
+</tr>
+<tr>
+<td>.</td>
+<td>BIOL240L - Microbiology Laboratory (0.25)</td>
+</tr>
+<tr>
+<td>.</td>
+<td>BIOL241 - Introduction to Applied Microbiology (0.50)</td>
+</tr>
+<tr>
+<td>·</td>
+<td>BIOL273 - Principles of Human Physiology 1 (0.50)</td>
+</tr>
+<tr>
+<td>·</td>
+<td>BIOL280 - Introduction to Biophysics (0.50)</td>
+</tr>
+<tr>
+<td>.</td>
+<td>BIOL373 - Principles of Human Physiology 2 (0.50)</td>
+</tr>
+<tr>
+<td>.</td>
+<td>BIOL373L - Human Physiology Laboratory (0.25)</td>
+</tr>
+<tr>
+<td>·</td>
+<td>CHE102 - Chemistry for Engineers (0.50)</td>
+</tr>
+<tr>
+<td>·</td>
+<td>CHE161 - Engineering Biology (0.50)</td>
+</tr>
+<tr>
+<td>·</td>
+<td>CHEM123 - General Chemistry 2 (0.50)</td>
+</tr>
+<tr>
+<td>·</td>
+<td>CHEM123L - General Chemistry Laboratory 2 (0.25)</td>
+</tr>
+<tr>
+<td>·</td>
+<td>CHEM209 - Introductory Spectroscopy and Structure (0.50)</td>
+</tr>
+<tr>
+<td>·</td>
+<td>CHEM237 - Introductory Biochemistry (0.50)</td>
+</tr>
+<tr>
+<td>·</td>
+<td>CHEM237L - Introductory Biochemistry Laboratory (0.25)</td>
+</tr>
+<tr>
+<td>·</td>
+<td>CHEM254 - Introductory Chemical Thermodynamics (0.50)</td>
+</tr>
+<tr>
+<td>·</td>
+<td>CHEM262 - Organic Chemistry for Engineering (0.50)</td>
+</tr>
+<tr>
+<td>·</td>
+<td>CHEM262L - Organic Chemistry Laboratory for Engineering Students (0.25)</td>
+</tr>
+<tr>
+<td>·</td>
+<td>CHEM266 - Basic Organic Chemistry 1 (0.50)</td>
+</tr>
+<tr>
+<td>·</td>
+<td>CHEM356 - Introductory Quantum Mechanics (0.50)</td>
+</tr>
+<tr>
+<td>·</td>
+<td>EARTH121 - Introductory Earth Sciences (0.50)</td>
+</tr>
+<tr>
+<td>·</td>
+<td>EARTH122 - Introductory Environmental Sciences (0.50)</td>
+</tr>
+<tr>
+<td>·</td>
+<td>EARTH123 - Introductory Hydrology (0.50)</td>
+</tr>
+<tr>
+<td>·</td>
+<td>EARTH221 - Introductory Geochemistry (0.50)</td>
+</tr>
+<tr>
+<td>·</td>
+<td>EARTH270 - Disasters and Natural Hazards (0.50)</td>
+</tr>
+<tr>
+<td>·</td>
+<td>EARTH281 - Geological Impacts on Human Health (0.50)</td>
+</tr>
+<tr>
+<td>·</td>
+<td>ECE231 - Semiconductor Physics and Devices (0.50)</td>
+</tr>
+<tr>
+<td>·</td>
+<td>ECE305 - Introduction to Quantum Mechanics (0.50)</td>
+</tr>
+<tr>
+<td>·</td>
+<td>ECE403 - Thermal Physics (0.50)</td>
+</tr>
+<tr>
+<td>·</td>
+<td>ECE404 - Geometrical and Physical Optics (0.50)</td>
+</tr>
+<tr>
+<td>·</td>
+<td>ENVE275 - Aquatic Chemistry (0.50)</td>
+</tr>
+<tr>
+<td>·</td>
+<td>ENVS200 - Field Ecology (0.50)</td>
+</tr>
+<tr>
+<td></td>
+<td>NE222 - Organic Chemistry for Nanotechnology Engineers (0.50)</td>
+</tr>
+<tr>
+<td>·</td>
+<td>PHYS124 - Modern Physics (0.50)</td>
+</tr>
+<tr>
+<td>·</td>
+<td>PHYS233 - Introduction to Quantum Mechanics (0.50)</td>
+</tr>
+<tr>
+<td>·</td>
+<td>PHYS234 - Quantum Physics 1 (0.50)</td>
+</tr>
+<tr>
+<td>·</td>
+<td>PHYS263 - Classical Mechanics and Special Relativity (0.50)</td>
+</tr>
+<tr>
+<td>·</td>
+<td>PHYS275 - Planets (0.50)</td>
+</tr>
+<tr>
+<td>·</td>
+<td>PHYS280 - Introduction to Biophysics (0.50)</td>
+</tr>
+</table>
+
+
+<!-- PageFooter="https://uwaterloo.ca/academic-calendar/undergraduate-studies/catalog#/programs/BybwJ10Ri3?isPrint=true" -->
+<!-- PageNumber="6/12" -->
+<!-- PageBreak -->
+
+1/30/26, 6:55 PM
+
+Computer Engineering (Bachelor of Applied Science - Honours)
+
+· PHYS334 - Quantum Physics 2 (0.50)
+
+· PHYS335 - Condensed Matter Physics (0.50)
+
+· PHYS375 - Stars (0.50)
+
+· PHYS380 - Molecular and Cellular Biophysics (0.50)
+
+· PSYCH207 - Cognitive Processes (0.50)
+
+· PSYCH261 - Physiological Psychology (0.50)
+
+· PSYCH306 - Perception (0.50)
+
+. SCI238 - Introductory Astronomy (0.50)
+
+. SCI250 - Environmental Geology (0.50)
+
+
+## Technical Electives List
+
+1
+
+· Complete a total of 8 Technical Electives. At least one TE, to a maximum of two, must be from an engineering plan other than Computer
+Engineering or Electrical Engineering (see Additional Constraints)
+
+
+### List 1 1
+
+· Complete 2 of the following:
+
+· ECE320 - Computer Architecture (0.50)
+
+o ECE351 - Compilers (0.50)
+
+o ECE356 - Database Systems (0.50)
+
+o ECE358 - Computer Networks (0.50)
+
+
+### List 2 1
+
+· Complete all of the following
+
+o Complete one course from this list or an additional course from List 1
+
+o Choose any of the following:
+
+· ECE313 - Digital Signal Processing (0.50)
+
+· ECE331 - Electronic Devices (0.50)
+
+· ECE360 - Power Systems and Smart Grids (0.50)
+
+· ECE373. - Radio Frequency and Microwave Circuits (0.50)
+
+List 3
+1
+
+<!-- PageFooter="https://uwaterloo.ca/academic-calendar/undergraduate-studies/catalog#/programs/BybwJ10Ri3?isPrint=true" -->
+<!-- PageNumber="7/12" -->
+<!-- PageBreak -->
+
+1/30/26, 6:55 PM
+
+<!-- PageHeader="Computer Engineering (Bachelor of Applied Science - Honours)" -->
+
+· Complete 3 of the following:
+
+· ECE406 - Algorithm Design and Analysis (0.50)
+
+o ECE409 - Cryptography and System Security (0.50)
+
+o ECE414 - Wireless Communications (0.50)
+
+· ECE416 - Advanced Topics in Networking (0.50)
+
+o ECE417 - Image Processing (0.50)
+
+o ECE423 - Embedded Computer Systems (0.50)
+
+o ECE432 - Radio Frequency Integrated Devices and Circuits (0.50)
+
+· ECE433 - Fabrication Technologies for Micro and Nano Devices (0.50)
+
+o ECE444 - Integrated Analog Electronics (0.50)
+
+o ECE445 - Integrated Digital Electronics (0.50)
+
+o ECE451 - Software Requirements Specification and Analysis (0.50)
+
+· ECE452 - Software Design and Architectures (0.50)
+
+o ECE453 - Software Testing, Quality Assurance, and Maintenance (0.50)
+
+o ECE454 - Distributed Computing (0.50)
+
+o ECE455 - Embedded Software (0.50)
+
+· ECE457A - Co-operative and Adaptive Algorithms (0.50)
+
+· ECE457B - Fundamentals of Computational Intelligence (0.50)
+
+o ECE457C - Reinforcement Learning (0.50)
+
+o ECE458 - Computer Security (0.50)
+
+· ECE459 - Programming for Performance (0.50)
+
+· ECE462 - Electrical Distribution Systems (0.50)
+
+· ECE463 - Design and Applications of Power Electronic Converters (0.50)
+
+· ECE464 - High Voltage Engineering and Power System Protection (0.50)
+
+· ECE467 - Power Systems Analysis, Operations, and Markets (0.50)
+
+· ECE474 - Radio and Wireless Systems (0.50)
+
+· ECE475 - Radio-Wave Systems (0.50)
+
+· ECE477 - Photonic Devices and Systems (0.50)
+
+o ECE481 - Digital Control Systems (0.50)
+
+o ECE486 - Robot Dynamics and Control (0.50)
+
+o ECE488 - Multivariable Control Systems (0.50)
+
+· ECE493 - Special Topics in Electrical and Computer Engineering (0.50)
+
+o ECE495 - Autonomous Vehicles (0.50)
+
+· ECE499 - Engineering Project (0.50)
+
+List 4
+
+A
+
+<!-- PageFooter="https://uwaterloo.ca/academic-calendar/undergraduate-studies/catalog#/programs/BybwJ10Ri3?isPrint=true" -->
+<!-- PageNumber="8/12" -->
+<!-- PageBreak -->
+
+1/30/26, 6:55 PM
+
+<!-- PageHeader="Computer Engineering (Bachelor of Applied Science - Honours)" -->
+
+· Complete 1 of the following:
+
+· BME411 - Optimization and Numerical Methods (0.50)
+
+o BME581 - Ultrasound in Medicine and Biology (0.50)
+
+o CHE522 - Advanced Process Dynamics and Control (0.50)
+
+o CHE524 - Process Control Laboratory (0.50)
+
+o ME351 - Fluid Mechanics 1 (0.50)
+
+o ME459 - Energy Conversion (0.50)
+
+o ME547 - Robot Manipulators: Kinematics, Dynamics, Control (0.50)
+
+o MSE331 - Introduction to Optimization (0.50)
+
+o MSE431 - Stochastic Models and Methods (0.50)
+
+· MSE432 - Production and Service Operations Management (0.50)
+
+· MSE435 - Advanced Optimization Techniques (0.50)
+
+o MSE446 - Introduction to Machine Learning (0.50)
+
+o MSE452 - Decision Making Under Uncertainty (0.50)
+
+· MSE541 - Search Engines (0.50)
+
+o MSE546 - Advanced Machine Learning (0.50)
+
+· MTE544 - Autonomous Mobile Robots (0.50)
+
+· NE345 - Photonic Materials and Devices (0.50)
+
+· SYDE411 - Optimization and Numerical Methods (0.50)
+
+· SYDE522 - Foundations of Artificial Intelligence (0.50)
+
+· SYDE531 - Design Optimization Under Probabilistic Uncertainty (0.50)
+
+· SYDE542 - Interface Design (0.50)
+
+· SYDE544 - Biomedical Measurement and Signal Processing (0.50)
+
+· SYDE552 - Computational Neuroscience (0.50)
+
+· SYDE556 - Simulating Neurobiological Systems (0.50)
+
+· SYDE572 - Introduction to Pattern Recognition (0.50)
+
+· SYDE575 - Image Processing (0.50)
+
+List 5
+
+^
+
+<!-- PageFooter="https://uwaterloo.ca/academic-calendar/undergraduate-studies/catalog#/programs/BybwJ10Ri3?isPrint=true" -->
+<!-- PageNumber="9/12" -->
+<!-- PageBreak -->
+
+1/30/26, 6:55 PM
+
+<!-- PageHeader="Computer Engineering (Bachelor of Applied Science - Honours)" -->
+
+· Complete all of the following
+
+o Complete one course from this list or any additional course from List 1, 2, 3, or 4
+
+o Choose any of the following:
+
+· ACTSC446 - Mathematics of Financial Markets (0.50)
+
+· CO259 - Introduction to Optimization (0.50)
+
+· CO342 - Introduction to Graph Theory (0.50)
+
+· CO456 - Introduction to Game Theory (0.50)
+
+· CO463 - Convex Optimization and Analysis (0.50)
+
+· CO466 - Continuous Optimization (0.50)
+
+· CS349 - User Interfaces (0.50)
+
+· CS442 - Principles of Programming Languages (0.50)
+
+· CS448 - Database Systems Implementation (0.50)
+
+· CS452 - Real-Time Programming (0.50)
+
+· CS480 - Introduction to Machine Learning (0.50)
+
+· CS484 - Computational Vision (0.50)
+
+· CS485. - Statistical and Computational Foundations of Machine Learning (0.50)
+
+· CS486 - Introduction to Artificial Intelligence (0.50)
+
+· CS488 - Introduction to Computer Graphics (0.50)
+
+· ECE260 - Electromechanical Energy Conversion (0.50)
+
+· ECE340 - Electronic Circuits 2 (0.50)
+
+· ECE375 - Electromagnetic Fields and Waves (0.50)
+
+· STAT340 - Stochastic Simulation Methods (0.50)
+
+· STAT341 - Computational Statistics and Data Analysis (0.50)
+
+· STAT440 - Computational Inference (0.50)
+
+· STAT441 - Statistical Learning - Classification (0.50)
+
+· STAT444 - Statistical Learning - Advanced Regression (0.50)
+
+
+# Additional Constraints
+
+1\. The course taken in the Ethics List can also be used towards the CSE or the PD requirements.
+
+2\. For the Natural Science requirement, if a 0.25-laboratory course accompanies a lecture course, the laboratory course must also be taken and the
+pair together count as one course towards the two-course requirement (e.g., BIOL130 with BIOL130L).
+
+3\. At least one TE, to a maximum of two, must be from another engineering (other than Computer Engineering or Electrical Engineering) plan; such
+courses must have sufficiently advanced engineering science or engineering design content to be allowed, and must be approved by the Electrical
+and Computer Engineering Undergraduate Office.
+
+4\. Exceptions to the requirements and electives listed above require prior approval of the Electrical and Computer Engineering Associate Chair,
+Undergraduate Studies.
+
+
+# Specializations
+
+Students may choose to focus their elective choices by completing one (or more) of two available specializations.
+
+
+# Specializations List
+
+· CE-Communications & Signal Processing Specialization, or CE-Quantum Engineering Specialization
+
+Offered by Faculty(ies)
+Faculty of Engineering
+
+<!-- PageFooter="https://uwaterloo.ca/academic-calendar/undergraduate-studies/catalog#/programs/BybwJ10Ri3?isPrint=true" -->
+<!-- PageNumber="10/12" -->
+<!-- PageBreak -->
+
+<!-- PageHeader="1/30/26, 6:55 PM" -->
+<!-- PageHeader="Computer Engineering (Bachelor of Applied Science - Honours)" -->
+
+Waterloo, ON, Canada N2L 3G1
+
+O
+200 University Avenue West
+<htt
+ps:/
+/uw
+ate
+rloo
+.ca/
++1 519 888 4567
+ma
+p/>
+
+Contact Waterloo <https://uwaterloo.ca/about/contact-us>
+Accessibility <https://uwaterloo.ca/accessibility/>
+
+News <https://uwaterloo.ca/news/>
+
+Maps & directions <https://uwaterloo.ca/about/maps-and-
+directions>
+Privacy
+
+Careers
+<https://uwaterloo.ca/privacy/>
+<https://uwaterloo.ca/careers/>
+Emergency notifications <https://uwaterloo.ca/emergency-
+notifications/>
+Copyright <https://uwaterloo.ca/copyright>
+Feedback <https://uwaterloo.ca/about/contact-us/contact-form>
+
+☒ ☒ ☒
+<https:/hwaswirtsya gelato/intebidéhowboydlacobwebet
+
+@uwaterloo social directory <https://uwaterloo.ca/social-media/>
+
+The University of Waterloo acknowledges that much of our work takes place on the traditional territory of the Neutral, Anishinaabeg, and
+Haudenosaunee peoples. Our main campus is situated on the Haldimand Tract, the land granted to the Six Nations that includes six miles
+on each side of the Grand River. Our active work toward reconciliation takes place across our campuses through research, learning,
+teaching, and community building, and is co-ordinated within the Office of Indigenous Relations <https://uwaterloo.ca/indigenous>.
+
+
+<figure>
+
+WHERE THERE'S
+A CHALLENGE,
+WATERLOO IS
+ON IT.
+
+</figure>
+
+
+Learn how ->
+<https://uwaterloo.ca/on-it>
+
+<!-- PageFooter="https://uwaterloo.ca/academic-calendar/undergraduate-studies/catalog#/programs/BybwJ10Ri3?isPrint=true" -->
+<!-- PageNumber="11/12" -->
+<!-- PageBreak -->
+
+1/30/26, 6:55 PM
+
+Computer Engineering (Bachelor of Applied Science - Honours)
+
+@2025 All rights reserved
+
+<!-- PageFooter="https://uwaterloo.ca/academic-calendar/undergraduate-studies/catalog#/programs/BybwJ10Ri3?isPrint=true" -->
+<!-- PageNumber="12/12" -->
