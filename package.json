@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "lint:strict": "next lint --max-warnings 0",
     "type-check": "tsc --noEmit",
+    "test:pre-commit": "npm run type-check && npm run lint:strict",
     "sync-courses": "tsx scripts/sync-courses.ts"
   },
   "dependencies": {
